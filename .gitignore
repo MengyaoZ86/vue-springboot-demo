@@ -1,0 +1,20 @@
+# Vue
+vue-qianduan/node_modules
+vue-qianduan/dist
+
+# SpringBoot
+demo-houduan/target
+
+# IDEA
+.idea
+*.iml
+
+# VSCode
+.vscode
+
+# Mac
+.DS_Store
+
+# Env
+.env
+.env.*

@@ -1,0 +1,17 @@
+-- 初始化数据库与默认管理员账号
+CREATE DATABASE IF NOT EXISTS raki DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci;
+USE raki;
+
+CREATE TABLE IF NOT EXISTS admin (
+    id BIGINT AUTO_INCREMENT PRIMARY KEY,
+    username VARCHAR(50) NOT NULL UNIQUE COMMENT '用户名',
+    userpwd VARCHAR(100) NOT NULL COMMENT '密码',
+    name VARCHAR(50) DEFAULT NULL COMMENT '姓名',
+    sex VARCHAR(10) DEFAULT NULL COMMENT '性别',
+    tel VARCHAR(20) DEFAULT NULL COMMENT '电话',
+    headurl VARCHAR(255) DEFAULT NULL COMMENT '头像'
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+INSERT INTO admin (username, userpwd, name, sex, tel)
+SELECT 'admin', '123456', '系统管理员', '男', '13800000000'
+WHERE NOT EXISTS (SELECT 1 FROM admin WHERE username = 'admin');
