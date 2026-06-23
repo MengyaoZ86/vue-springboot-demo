@@ -12,6 +12,7 @@ import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import jakarta.annotation.Resource;
 //import jakarta.annotation.Resources;
 import lombok.Data;
+import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.*;
 
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
@@ -47,6 +48,9 @@ public class AdminController {
     @PostMapping("/admin/add")
     @CrossOrigin
     public Result add(@RequestBody Admin admin) {
+        if (!StringUtils.hasText(admin.getUsername()) || !StringUtils.hasText(admin.getUserpwd())) {
+            return Result.fail("用户名和密码不能为空");
+        }
         LambdaQueryWrapper<Admin> lambdaQueryWrapper = new LambdaQueryWrapper<>();
         lambdaQueryWrapper.eq(Admin::getUsername,admin.getUsername());
         long count = adminService.count(lambdaQueryWrapper);
@@ -76,12 +80,11 @@ public class AdminController {
                                      @RequestParam(defaultValue = "10") Long pageSize) {
 
         LambdaQueryWrapper<Admin> wrapper = new LambdaQueryWrapper<>();
-        wrapper.like(admin.getName() != null, Admin::getName, admin.getName());
-        wrapper.like(admin.getTel() != null, Admin::getTel, admin.getTel());
+        wrapper.like(StringUtils.hasText(admin.getName()), Admin::getName, admin.getName());
+        wrapper.like(StringUtils.hasText(admin.getTel()), Admin::getTel, admin.getTel());
         wrapper.orderByDesc(Admin::getId);
         Page<Admin> page = new Page<>(pageNum, pageSize);
         IPage<Admin> resultPage = adminService.page(page, wrapper);  // MyBatis-Plus 自带分页
-        List<Admin> list = adminService.list(wrapper);
         return Result.data(resultPage);
     }
 
@@ -89,6 +92,9 @@ public class AdminController {
     @PostMapping("/admin/update")
     @CrossOrigin
     public Result update(@RequestBody Admin admin){
+        if (admin.getId() == null) {
+            return Result.fail("缺少用户ID");
+        }
         adminService.updateById(admin) ;
         //return admin.getId()
         return Result.success();

@@ -4,6 +4,7 @@ export const authApi = {
   getCaptcha: () => {
     return get('/auth/captcha', {})
   },
+
   login: (param: {
     username: string
     userpwd: string
@@ -11,5 +12,16 @@ export const authApi = {
     captchaKey: string
   }) => {
     return post('/auth/login', param)
+  },
+
+  register: (param: {
+    username: string
+    userpwd: string
+    name: string
+    sex: string
+    tel: string
+    headurl?: string
+  }) => {
+    return post('/auth/register', param)
   },
 }

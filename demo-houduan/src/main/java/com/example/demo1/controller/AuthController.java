@@ -13,6 +13,7 @@ import com.example.demo1.vo.LoginVO;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.annotation.Resource;
+import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.*;
 
 import java.io.IOException;
@@ -56,5 +57,25 @@ public class AuthController {
         vo.setName(admin.getName());
         vo.setHeadurl(admin.getHeadurl());
         return Result.data(vo);
+    }
+
+    @Operation(summary = "用户注册")
+    @PostMapping("/register")
+    public Result<Void> register(@RequestBody Admin admin) {
+        if (!StringUtils.hasText(admin.getUsername()) || !StringUtils.hasText(admin.getUserpwd())) {
+            return Result.fail("用户名和密码不能为空");
+        }
+
+        LambdaQueryWrapper<Admin> wrapper = new LambdaQueryWrapper<>();
+        wrapper.eq(Admin::getUsername, admin.getUsername());
+        if (adminService.count(wrapper) > 0) {
+            throw new BusinessException(ResponseCode.USERNAME_EXIST);
+        }
+
+        if (!StringUtils.hasText(admin.getName())) {
+            admin.setName(admin.getUsername());
+        }
+        adminService.save(admin);
+        return Result.success("注册成功");
     }
 }

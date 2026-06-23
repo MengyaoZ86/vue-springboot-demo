@@ -34,18 +34,34 @@ public class CaptchaService {
             throw new BusinessException(ResponseCode.CAPTCHA_ERROR);
         }
         CaptchaEntry entry = captchaStore.remove(key);
-        if (entry == null || System.currentTimeMillis() - entry.createTime > EXPIRE_MS) {
+        if (entry == null || System.currentTimeMillis() - entry.getCreateTime() > EXPIRE_MS) {
             throw new BusinessException(ResponseCode.CAPTCHA_ERROR);
         }
-        if (!entry.code.equalsIgnoreCase(code.trim())) {
+        if (!entry.getCode().equalsIgnoreCase(code.trim())) {
             throw new BusinessException(ResponseCode.CAPTCHA_ERROR);
         }
     }
 
     private void cleanExpired() {
         long now = System.currentTimeMillis();
-        captchaStore.entrySet().removeIf(e -> now - e.getValue().createTime > EXPIRE_MS);
+        captchaStore.entrySet().removeIf(e -> now - e.getValue().getCreateTime() > EXPIRE_MS);
     }
 
-    private record CaptchaEntry(String code, long createTime) {}
+    private static class CaptchaEntry {
+        private final String code;
+        private final long createTime;
+
+        public CaptchaEntry(String code, long createTime) {
+            this.code = code;
+            this.createTime = createTime;
+        }
+
+        public String getCode() {
+            return code;
+        }
+
+        public long getCreateTime() {
+            return createTime;
+        }
+    }
 }

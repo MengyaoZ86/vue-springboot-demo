@@ -12,7 +12,7 @@ const TOKEN_NAME = 'pdmtoken';
 
 // 创建axios对象
 const request = axios.create({
-    baseURL: import.meta.env.VITE_APP_API_URL,
+  baseURL: import.meta.env.VITE_APP_API_URL || '/raki',
 });
 
 // 退出系统

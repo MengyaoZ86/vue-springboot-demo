@@ -57,6 +57,11 @@
                 登 录
               </el-button>
             </el-form-item>
+            <div class="register-entry">
+          <span>还没有账号？</span>
+         <el-link type="primary" @click="router.push('/register')">立即注册</el-link>
+          </div>
+
           </el-form>
         </div>
       </div>
@@ -149,4 +154,12 @@ onMounted(() => {
   border-radius: 4px;
   border: 1px solid #dcdfe6;
 }
+
+.register-entry {
+  display: flex;
+  justify-content: center;
+  gap: 8px;
+  color: #606266;
+}
+
 </style>
